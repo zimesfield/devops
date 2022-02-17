@@ -3,13 +3,13 @@ name: Feature Branch
 
 on:
   workflow_call:
-    inputs:
-      name:
-        required: true
-        type: string
-      version:
-        required: true
-        type: string
+#    inputs:
+#      name:
+#        required: true
+#        type: string
+#      version:
+#        required: true
+#        type: string
 #    secrets:
 #      MAVEN_USERNAME:
 #        required: true
