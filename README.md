@@ -1,3 +1,1 @@
-# infrastructue
-# devops
 # devops
