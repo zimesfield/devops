@@ -1,6 +1,5 @@
 name: YAML schema validator
-on:
-  push:
+on: push
 
 jobs:
   yaml-schema-validation:
