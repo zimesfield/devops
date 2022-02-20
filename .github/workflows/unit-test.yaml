@@ -3,10 +3,10 @@ name: Feature Branch
 
 on:
   workflow_call:
-#    inputs:
-#      name:
-#        required: true
-#        type: string
+    inputs:
+      environment:
+        required: true
+        type: string
 #      version:
 #        required: true
 #        type: string
