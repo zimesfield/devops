@@ -67,12 +67,12 @@ jobs:
           cache: maven
       - name: Run coverage
         run: ./mvnw clean  innstall -P coverage
-      -name: codecov jacoco report
-        uses: codecov/codecov-action@v1
-          with:
-            file: ./**/target/site/jacoco/jacoco.xml
-            name: codecov
-#
+#      -name: codecov jacoco report
+#        uses: codecov/codecov-action@v1
+#          with:
+#            file: ./**/target/site/jacoco/jacoco.xml
+#            name: codecov
+##
 #  upload:
 #      needs: coverage
 #      runs-on: ubuntu-latest
