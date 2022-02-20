@@ -37,7 +37,7 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: ${{ matrix.java-version }}
-        run: ./mvnw --batch-mode --update-snapshots test
+      run: ./mvnw --batch-mode --update-snapshots test
 
   verify:
     runs-on: ubuntu-latest
@@ -52,7 +52,7 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: ${{ matrix.java-version }}
-        run: ./mvnw --batch-mode --update-snapshots verify
+      run: ./mvnw --batch-mode --update-snapshots verify
 
 #  coverage:
 #    needs: build
