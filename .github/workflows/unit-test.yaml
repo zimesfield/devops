@@ -40,6 +40,7 @@ jobs:
       - run: ./mvnw --batch-mode --update-snapshots test
 
   verify:
+    needs: test
     runs-on: ubuntu-latest
 
     strategy:
@@ -55,7 +56,7 @@ jobs:
       - run: ./mvnw --batch-mode --update-snapshots verify
 
   coverage:
-    needs: build
+    needs: verify
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -67,11 +68,11 @@ jobs:
           cache: maven
       - name: Run coverage
         run: ./mvnw clean  innstall -P coverage
-#      -name: codecov jacoco report
-#        uses: codecov/codecov-action@v1
-#          with:
-#            file: ./**/target/site/jacoco/jacoco.xml
-#            name: codecov
+      -name: codecov jacoco report
+        uses: codecov/codecov-action@v1
+          with:
+            file: ./**/target/site/jacoco/jacoco.xml
+            name: codecov
 ##
 #  upload:
 #      needs: coverage
