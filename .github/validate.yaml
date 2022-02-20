@@ -7,8 +7,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: nrkno/yaml-schema-validator-github-action@v4
-        with:
-          schema: workflows/*.yaml
-          target: target.yaml
+#        with:
+#          schema: workflows/*.yaml
+#          target: target.yaml
           # Uncomment to disable strict checks
           # no-strict: true
