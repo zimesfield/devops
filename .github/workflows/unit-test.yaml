@@ -89,7 +89,7 @@ jobs:
           distribution: 'adopt'
           cache: maven
       - name: Build with Maven
-        run: ./mvnw install --batch-mode --update-snapshots verify
+        run: ./mvnw install -Dmaven.test.skip=true --batch-mode --update-snapshots
       - name: Upload Jar to stagging
         run: mkdir staging && cp target/*.jar staging
       - uses: actions/upload-artifact@v2
