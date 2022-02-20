@@ -59,7 +59,7 @@ jobs:
 
   coverage:
     name: Coverage Report
-    needs: verify
+    needs: [test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -78,7 +78,7 @@ jobs:
 ##
   upload:
     name: Upload Artifact To Github
-    needs: coverage
+    needs: [verify,coverage]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
