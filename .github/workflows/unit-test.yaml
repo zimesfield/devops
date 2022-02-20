@@ -25,6 +25,7 @@ on:
 #      - 'release*'
 jobs:
   test:
+    name: Unit Test
     runs-on: ubuntu-latest
 
     strategy:
@@ -40,6 +41,7 @@ jobs:
       - run: ./mvnw --batch-mode --update-snapshots test
 
   verify:
+    name: Integration Test
     needs: test
     runs-on: ubuntu-latest
 
@@ -56,6 +58,7 @@ jobs:
       - run: ./mvnw --batch-mode --update-snapshots verify
 
   coverage:
+    name: Coverage Report
     needs: verify
     runs-on: ubuntu-latest
     steps:
@@ -74,21 +77,22 @@ jobs:
 #            name: codecov
 ##
   upload:
-      needs: coverage
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2
-        - name: Set up JDK 11
-          uses: actions/setup-java@v2
-          with:
-            java-version: '11'
-            distribution: 'adopt'
-            cache: maven
-        - name: Build with Maven
-          run: ./mvnw install --batch-mode --update-snapshots verify
-        - name: Upload Jar to stagging
-          run: mkdir staging && cp target/*.jar staging
-        - uses: actions/upload-artifact@v2
-          with:
-            name: Package
-            path: staging
+    name: Upload Artifact To Github
+    needs: coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          cache: maven
+      - name: Build with Maven
+        run: ./mvnw install --batch-mode --update-snapshots verify
+      - name: Upload Jar to stagging
+        run: mkdir staging && cp target/*.jar staging
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Package
+          path: staging
