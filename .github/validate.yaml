@@ -1,9 +1,5 @@
 name: YAML schema validator
-on:
-  push:
-    branches-ignore:
-      - master
-  status:
+on: [push]
 
 jobs:
   yaml-schema-validation:
