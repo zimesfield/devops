@@ -3,16 +3,13 @@ name: Feature Branch
 
 on:
   workflow_call:
-#    inputs:
-#      environment:
-#        required: true
-#        type: string
-  workflow_dispatch:
     inputs:
       job:
         description: 'Job to run.'
         required: true
         default: 'prod-deploy'
+#  workflow_dispatch:
+
 #      version:
 #        required: true
 #        type: string
@@ -113,6 +110,7 @@ jobs:
 
   prod-deploy:
     name: Deploy prod-deploy
+    needs: [ dev-deploy ]
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.job == 'prod-deploy'}}
     steps:
