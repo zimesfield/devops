@@ -7,6 +7,7 @@ on:
       job:
         description: 'Job to run.'
         required: true
+        type: string
         default: 'dev-deploy'
 #  workflow_dispatch:
 
