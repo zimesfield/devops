@@ -7,6 +7,12 @@ on:
 #      environment:
 #        required: true
 #        type: string
+  workflow_dispatch:
+    inputs:
+      job:
+        description: 'Job to run.'
+        required: true
+        default: 'prod-deploy'
 #      version:
 #        required: true
 #        type: string
@@ -96,3 +102,19 @@ jobs:
         with:
           name: Package
           path: staging
+
+  dev-deploy:
+    name: Deploy dev-deploy
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.job == 'dev-deploy'}}
+    steps:
+      - name: ${{ github.event.inputs.job }} - step 1
+        run: echo "${{ github.event.inputs.job }} triggered!"
+
+  prod-deploy:
+    name: Deploy prod-deploy
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.job == 'prod-deploy'}}
+    steps:
+      - name: ${{ github.event.inputs.job }} - step 1
+        run: echo "${{ github.event.inputs.job }} triggered!"
