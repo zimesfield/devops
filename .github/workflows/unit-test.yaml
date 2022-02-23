@@ -2,7 +2,7 @@ name: Feature Branch
 
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       job:
         description: 'Job to run.'
