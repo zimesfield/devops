@@ -2,13 +2,14 @@ name: Feature Branch
 
 
 on:
-  workflow_dispatch:
-    inputs:
-      job:
-        description: 'Job to run.'
-        required: true
-        type: string
-        default: 'dev-deploy'
+  workflow_call:
+    workflow_dispatch:
+      inputs:
+        job:
+          description: 'Job to run.'
+          required: true
+          type: string
+          default: 'dev-deploy'
 #  workflow_dispatch:
 
 #      version:
