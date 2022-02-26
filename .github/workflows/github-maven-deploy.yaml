@@ -27,7 +27,7 @@ on:
 
 jobs:
   call-workflow:
-    uses: ./github-ci-maven.yaml
+    uses: ./github-ci-maven.yaml@main
     with:
       environment: ${{ github.event.inputs.environment }}
 #  publish-artifact:
