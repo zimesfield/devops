@@ -102,14 +102,14 @@ jobs:
     needs: [ upload-artifact-to-github ]
     if: ${{ inputs.environment == 'dev'}}
     steps:
-      - name: Bump Version
-          id: bump
-          uses: nnichols/maven-version-bump-action@v3
-          with:
-            github-token: ${{ secrets.github_token }}
-
-            - name: Print Version
-              run: "echo 'New Version: ${{steps.bump.outputs.version}}'"
+#      - name: Bump Version
+#          id: bump
+#          uses: nnichols/maven-version-bump-action@v3
+#          with:
+#            github-token: ${{ secrets.github_token }}
+#
+#            - name: Print Version
+#              run: "echo 'New Version: ${{steps.bump.outputs.version}}'"
       - name: ${{ github.event.inputs.job }} - step 1
         run: echo "${{ github.event.inputs.job }} triggered!"
 #      - name: ${{ github.event.inputs.job }} - step 1
