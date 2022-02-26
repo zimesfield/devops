@@ -109,7 +109,7 @@ jobs:
         uses: nnichols/maven-version-bump-action@v3
         with:
           github-token: ${{ secrets.github_token }}
-          pom-path: ${{ github.event.inputs.pom-path }}
+          pom-path: $POM_PATH
 
       - name: Print Version
         run: "echo 'New Version: ${{steps.bump.outputs.version}}'"
@@ -125,9 +125,12 @@ jobs:
           gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }} # Value of the GPG private key to import
           gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
 
-        #      - name: Publish to Maven Central
-        #        run: |
-        #          echo "Log level: $LEVEL"
+      - name: Publish to Maven Central
+        run: |
+          echo "Log level: $LEVEL"
+          echo "ENVIRONMENT level: $ENVIRONMENT"
+          echo "TAGS level: $ENVIRONMENT"
+          echo "POM_PATH level: $POM_PATH"
         #          echo "Tags: $TAGS"
         #          echo "Environment: $ENVIRONMENT"
         #          if ($ENVIRONMENT == 'prod')
@@ -144,3 +147,4 @@ jobs:
           LEVEL: ${{ github.event.inputs.logLevel }}
           TAGS: ${{ github.event.inputs.tags }}
           ENVIRONMENT: ${{ github.event.inputs.environment }}
+          POM_PATH: ${{ github.event.inputs.pom-path }}
