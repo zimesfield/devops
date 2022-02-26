@@ -109,6 +109,8 @@ jobs:
         uses: nnichols/maven-version-bump-action@v3
         with:
           github-token: ${{ secrets.github_token }}
+          pom-path: ${{ github.event.inputs.pom-path }}
+
       - name: Print Version
         run: "echo 'New Version: ${{steps.bump.outputs.version}}'"
       - uses: actions/checkout@v2
@@ -142,4 +144,3 @@ jobs:
           LEVEL: ${{ github.event.inputs.logLevel }}
           TAGS: ${{ github.event.inputs.tags }}
           ENVIRONMENT: ${{ github.event.inputs.environment }}
-          POMPATH: ${{ github.event.inputs.pom-path }}
