@@ -8,6 +8,10 @@ on:
         description: 'Job to run.'
         type: string
         default: 'dev'
+      pom-path:
+        description: 'Pom path.'
+        type: string
+        default: '../../'
 #  workflow_dispatch:
 
 #      version:
@@ -138,4 +142,4 @@ jobs:
           LEVEL: ${{ github.event.inputs.logLevel }}
           TAGS: ${{ github.event.inputs.tags }}
           ENVIRONMENT: ${{ github.event.inputs.environment }}
-          POMPATH: ../../
+          POMPATH: ${{ github.event.inputs.pom-path }}
