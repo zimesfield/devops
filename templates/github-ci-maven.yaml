@@ -22,11 +22,6 @@ on:
 #      MAVEN_GPG_PASSPHRASE:
 #        required: true
 
-#on:
-#  push:
-#    branches-ignore:
-#      - 'main'
-#      - 'release*'
 jobs:
   test:
     name: Unit Test
