@@ -7,10 +7,12 @@ on:
       environment:
         description: 'Job to run.'
         type: string
+        required: false
         default: 'dev'
       pom-path:
         description: 'Pom path.'
         type: string
+        required: false
         default: '../..'
 #  workflow_dispatch:
 
@@ -144,7 +146,7 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-          LEVEL: ${{ github.event.inputs.logLevel }}
-          TAGS: ${{ github.event.inputs.tags }}
-          ENVIRONMENT: ${{ github.event.inputs.environment }}
-          POM_PATH: ${{ github.event.inputs.pom-path }}
+          LEVEL: ${{ inputs.logLevel }}
+          TAGS: ${{ inputs.tags }}
+          ENVIRONMENT: ${{ inputs.environment }}
+          POM_PATH: ${{ inputs.pom-path }}
