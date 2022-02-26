@@ -8,7 +8,7 @@ on:
         description: 'Job to run.'
         required: true
         type: string
-        default: 'dev-deploy'
+        default: 'dev'
 #  workflow_dispatch:
 
 #      version:
@@ -75,7 +75,7 @@ jobs:
 #            file: ./**/target/site/jacoco/jacoco.xml
 #            name: codecov
 ##
-  upload-artifact:
+  upload-artifact-to-github:
     name: Upload Artifact To Github
     needs: [verify,coverage]
     runs-on: ubuntu-latest
@@ -96,12 +96,20 @@ jobs:
           name: Package
           path: staging
 
-  dev-deploy:
+  deploy:
     name: Deploy dev-deploy
     runs-on: ubuntu-latest
-    needs: [ upload-artifact ]
-    if: ${{ inputs.environment == 'dev-deploy'}}
+    needs: [ upload-artifact-to-github ]
+    if: ${{ inputs.environment == 'dev'}}
     steps:
+      - name: Bump Version
+          id: bump
+          uses: nnichols/maven-version-bump-action@v3
+          with:
+            github-token: ${{ secrets.github_token }}
+
+            - name: Print Version
+              run: "echo 'New Version: ${{steps.bump.outputs.version}}'"
       - name: ${{ github.event.inputs.job }} - step 1
         run: echo "${{ github.event.inputs.job }} triggered!"
 #      - name: ${{ github.event.inputs.job }} - step 1
@@ -130,11 +138,11 @@ jobs:
 #          NEW_VERSION: 2.0-SNAPSHOT
 
 
-  prod-deploy:
-    name: Deploy prod-deploy
-    needs: [ dev-deploy ]
-    runs-on: ubuntu-latest
-    if: ${{ inputs.environment == 'prod-deploy'}}
-    steps:
-      - name: ${{ github.event.inputs.job }} - step 1
-        run: echo "${{ github.event.inputs.job }} triggered!"
+#  prod-deploy:
+#    name: Deploy prod-deploy
+#    needs: [ dev-deploy ]
+#    runs-on: ubuntu-latest
+#    if: ${{ inputs.environment == 'prod'}}
+#    steps:
+#      - name: ${{ github.event.inputs.job }} - step 1
+#        run: echo "${{ github.event.inputs.job }} triggered!"
