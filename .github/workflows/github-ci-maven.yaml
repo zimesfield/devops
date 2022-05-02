@@ -14,18 +14,6 @@ on:
         type: string
         required: false
         default: '../..'
-#  workflow_dispatch:
-
-#      version:
-#        required: true
-#        type: string
-#    secrets:
-#      MAVEN_USERNAME:
-#        required: true
-#      MAVEN_PASSWORD:
-#        required: true
-#      MAVEN_GPG_PASSPHRASE:
-#        required: true
 
 jobs:
   test:
