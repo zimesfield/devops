@@ -20,24 +20,40 @@ jobs:
 #    uses: ./github-ci-maven.yaml@main
 #    with:
 #      environment: ${{ github.event.inputs.environment }}
-  coverage:
-    name: Coverage Report
-#    needs: [test]
+  verify:
+    name: Integration Test
+    needs: test
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        java-version: [ 11 ]
+
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v2
         with:
-          java-version: '11'
           distribution: 'adopt'
-          cache: maven
-      - name: Run coverage
-        run: ./mvnw -B verify -Pcoverage --no-transfer-progress
-      - name: codecov jacoco report
-        uses: codecov/codecov-action@v1
-        with:
-          file: |
-          if ('./**/target/site/jacoco/jacoco.xml')
-            ./**/target/site/jacoco/jacoco.xml
-          fi
-          name: codecov
+          java-version: ${{ matrix.java-version }}
+      - run: ./mvnw --batch-mode --update-snapshots verify
+#  coverage:
+#    name: Coverage Report
+##    needs: [test]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#      - uses: actions/setup-java@v2
+#        with:
+#          java-version: '11'
+#          distribution: 'adopt'
+#          cache: maven
+#      - name: Run coverage
+#        run: ./mvnw -B verify -Pcoverage --no-transfer-progress
+#      - name: codecov jacoco report
+#        uses: codecov/codecov-action@v1
+#        with:
+#          file: |
+#          if ('./**/target/site/jacoco/jacoco.xml')
+#            ./**/target/site/jacoco/jacoco.xml
+#          fi
+#          name: codecov
