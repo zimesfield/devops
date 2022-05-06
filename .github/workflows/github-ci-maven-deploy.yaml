@@ -34,7 +34,7 @@ jobs:
           echo "Environment: $ENVIRONMENT"
           NEW_VERSION=$(echo "${GITHUB_REF}" | cut -d "/" -f3)
           echo "New version: ${NEW_VERSION}"
-          ./mvnw clean deploy -B -Prelease --batch-mode -D skipTests --no-transfer-progress
+          ./mvnw clean deploy -B --batch-mode -D skipTests --no-transfer-progress
 
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
