@@ -8,21 +8,10 @@ on:
         type: string
         required: false
         default: 'prod'
-      pom-path:
-        description: 'Pom path.'
-        type: string
-        required: false
-        default: '../..'
 
 jobs:
-  call-workflow:
-    uses: ./github-ci-maven-test.yaml@main
-    with:
-      environment: ${{ github.event.inputs.environment }}
   publish-artifact:
     timeout-minutes: 30
-#    needs:
-#      - coverage
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -43,12 +32,10 @@ jobs:
           echo "Log level: $LEVEL"
           echo "Tags: $TAGS"
           echo "Environment: $ENVIRONMENT"
-          if ($ENVIRONMENT == 'prod')
-            NEW_VERSION=$(echo "${GITHUB_REF}" | cut -d "/" -f3)
-            echo "New version: ${NEW_VERSION}"
-            ./mvnw clean deploy -B -Drevision=${NEW_VERSION} -Prelease --batch-mode -D skipTests --no-transfer-progress
-          fi
-
+          NEW_VERSION=$(echo "${GITHUB_REF}" | cut -d "/" -f3)
+          echo "New version: ${NEW_VERSION}"
+          ./mvnw clean deploy -B -Prelease --batch-mode -D skipTests --no-transfer-progress
+        
 
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
