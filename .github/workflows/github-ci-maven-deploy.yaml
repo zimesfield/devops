@@ -15,14 +15,14 @@ on:
         default: '../..'
 
 jobs:
-#  call-workflow:
-#    uses: ./github-ci-maven-test.yaml@main
-#    with:
-#      environment: ${{ github.event.inputs.environment }}
+  call-workflow:
+    uses: ./github-ci-maven-test.yaml@main
+    with:
+      environment: ${{ github.event.inputs.environment }}
   publish-artifact:
     timeout-minutes: 30
-    needs:
-      - coverage
+#    needs:
+#      - coverage
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
