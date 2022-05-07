@@ -1,5 +1,5 @@
-#name: Publish Maven Artifact
-#
+name: Publish Maven Artifact
+
 on:
   workflow_call:
     inputs:
@@ -8,142 +8,101 @@ on:
         type: string
         required: false
         default: 'prod'
-
-#jobs:
-#  test:
-#    name: Unit Test
-#    runs-on: ubuntu-latest
-#
-#    strategy:
-#      matrix:
-#        java-version: [ 11 ]
-#
-#    steps:
-#      - uses: actions/checkout@v2
-#      - uses: actions/setup-java@v2
-#        with:
-#          distribution: 'adopt'
-#          java-version: ${{ matrix.java-version }}
-#      - run: ./mvnw --batch-mode --update-snapshots test
-#
-#  verify:
-#    name: Integration Test
-#    needs: test
-#    runs-on: ubuntu-latest
-#
-#    strategy:
-#      matrix:
-#        java-version: [ 11 ]
-#
-#    steps:
-#      - uses: actions/checkout@v2
-#      - uses: actions/setup-java@v2
-#        with:
-#          distribution: 'adopt'
-#          java-version: ${{ matrix.java-version }}
-#      - run: ./mvnw --batch-mode --update-snapshots verify
-#  coverage:
-#    name: Coverage Report
-#    needs: [ test, verify ]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#      - uses: actions/setup-java@v2
-#        with:
-#          java-version: '11'
-#          distribution: 'adopt'
-#          cache: maven
-#      - name: Run coverage
-#        run: ./mvnw -B verify -Pcoverage --no-transfer-progress
-#
-#  publish:
-#    timeout-minutes: 30
-#    needs: [ coverage ]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#
-##      - name: Set up JDK 11
-##        uses: actions/setup-java@v2
-##        with:
-##          distribution: 'adopt'
-##          java-version: 11
-##          server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
-##          server-username: OSSRH_USERNAME # env variable for username in deploy
-##          server-password: OSSRH_TOKEN # env variable for token in deploy
-##          gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }} # Value of the GPG private key to import
-##          gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
-#
-#      - name: Publish to Maven Central
-#        env:
-#          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-#          OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
-#          OSSRH_GPG_SECRET_KEY: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
-#          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-#          LEVEL: ${{ github.event.inputs.logLevel }}
-#          TAGS: ${{ github.event.inputs.tags }}
-#          ENVIRONMENT: ${{ github.event.inputs.environment }}
-#        run: |
-#          echo "OSSRH_GPG_SECRET_KEY: $OSSRH_GPG_SECRET_KEY"
-#          echo "MAVEN_GPG_PASSPHRASE: $MAVEN_GPG_PASSPHRASE"
-#          echo "OSSRH_TOKEN: $OSSRH_TOKEN"
-#          echo "OSSRH_USERNAME: $OSSRH_USERNAME"
-#          echo "Log level: $LEVEL"
-#          echo "Tags: $TAGS"
-#          echo "Environment: $ENVIRONMENT"
-#          NEW_VERSION=$(echo "${GITHUB_REF}" | cut -d "/" -f3)
-#          echo "New version: ${NEW_VERSION}"
-##          ./mvnw clean deploy -B -Prelease --batch-mode -D skipTests --no-transfer-progress
-#
-
-
-#name: Test, Build & Deploy
-#
-#on:
-#  push:
-#    branches-ignore:
-#      - 'main'
-##      - 'release'
-#
-#jobs:
-# deploy:
-#    uses: zimesfield/devops/.github/workflows/github-ci-maven-deploy.yaml@main
-#    with:
-#      environment: ${{ github.event.inputs.environment }}
-#name: workflow-level-custom-environment-variables
-#
-#on: [push]
-# Here the environment variable is declared in workflow level
+    secrets:
+      OSSRH_USERNAME:
+        required: true
+      OSSRH_TOKEN:
+        required: true
+      OSSRH_GPG_SECRET_KEY:
+        required: true
+      MAVEN_GPG_PASSPHRASE:
+        required: true
+      TAGS:
+        required: false
+      PUBLICENV: Available for all jobs in this workflow
 
 jobs:
-  env:
-    OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-    OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
-    OSSRH_GPG_SECRET_KEY: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
-    MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-    LEVEL: ${{ github.event.inputs.logLevel }}
-    TAGS: ${{ github.event.inputs.tags }}
-    ENVIRONMENT: ${{ github.event.inputs.environment }}
-    PUBLICENV: Available for all jobs in this workflow
-  sample-job-1:
+  test:
+    name: Unit Test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        java-version: [ 11 ]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: ${{ matrix.java-version }}
+      - run: ./mvnw --batch-mode --update-snapshots test
+
+  verify:
+    name: Integration Test
+    needs: test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        java-version: [ 11 ]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: ${{ matrix.java-version }}
+      - run: ./mvnw --batch-mode --update-snapshots verify
+  coverage:
+    name: Coverage Report
+    needs: [ test, verify ]
     runs-on: ubuntu-latest
     steps:
-      - name: step-1
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          cache: maven
+      - name: Run coverage
+        run: ./mvnw -B verify -Pcoverage --no-transfer-progress
+
+  publish:
+    timeout-minutes: 30
+    needs: [ coverage ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: 11
+          server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
+          server-username: OSSRH_USERNAME # env variable for username in deploy
+          server-password: OSSRH_TOKEN # env variable for token in deploy
+          gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }} # Value of the GPG private key to import
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
+
+      - name: Publish to Maven Central
+        env:
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
+          OSSRH_GPG_SECRET_KEY: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+          LEVEL: ${{ github.event.inputs.logLevel }}
+          TAGS: ${{ github.event.inputs.tags }}
+          ENVIRONMENT: ${{ github.event.inputs.environment }}
         run: |
-          echo "${PUBLICENV}"
-          echo "${OSSRH_USERNAME}"
-#          echo "${OSSRH_TOKEN}"
-#          echo "${OSSRH_GPG_SECRET_KEY}"
-#          echo "${MAVEN_GPG_PASSPHRASE}"
-        # This will echo the value/string of PUBLICENV
-
-      - name: step-2
-        run: echo "${PUBLICENV}"
-        # This will echo the value/string of PUBLICENV
-
-  sample-job-2:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "${PUBLICENV}"
-      # This will echo the value/string of PUBLICENV
-
+          echo "OSSRH_GPG_SECRET_KEY: $OSSRH_GPG_SECRET_KEY"
+          echo "MAVEN_GPG_PASSPHRASE: $MAVEN_GPG_PASSPHRASE"
+          echo "OSSRH_TOKEN: $OSSRH_TOKEN"
+          echo "OSSRH_USERNAME: $OSSRH_USERNAME"
+          echo "Log level: $LEVEL"
+          echo "Tags: $TAGS"
+          echo "Environment: $ENVIRONMENT"
+          NEW_VERSION=$(echo "${GITHUB_REF}" | cut -d "/" -f3)
+          echo "New version: ${NEW_VERSION}"
+          ./mvnw clean deploy -B -Prelease --batch-mode -D skipTests --no-transfer-progress
