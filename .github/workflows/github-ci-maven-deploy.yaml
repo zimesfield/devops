@@ -1,14 +1,14 @@
 #name: Publish Maven Artifact
 #
-#on:
-#  workflow_call:
-#    inputs:
-#      environment:
-#        description: 'Job to run.'
-#        type: string
-#        required: false
-#        default: 'prod'
-#
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'Job to run.'
+        type: string
+        required: false
+        default: 'prod'
+
 #jobs:
 #  test:
 #    name: Unit Test
@@ -110,9 +110,9 @@
 #    uses: zimesfield/devops/.github/workflows/github-ci-maven-deploy.yaml@main
 #    with:
 #      environment: ${{ github.event.inputs.environment }}
-name: workflow-level-custom-environment-variables
-
-on: [push]
+#name: workflow-level-custom-environment-variables
+#
+#on: [push]
 # Here the environment variable is declared in workflow level
 env:
   OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
