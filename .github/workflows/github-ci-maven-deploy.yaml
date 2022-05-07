@@ -8,15 +8,15 @@ on:
         type: string
         required: false
         default: 'prod'
-    secrets:
-      OSSRH_USERNAME:
-        required: true
-      OSSRH_TOKEN:
-        required: true
-      OSSRH_GPG_SECRET_KEY:
-        required: true
-      MAVEN_GPG_PASSPHRASE:
-        required: true
+#    secrets:
+#      OSSRH_USERNAME:
+#        required: true
+#      OSSRH_TOKEN:
+#        required: true
+#      OSSRH_GPG_SECRET_KEY:
+#        required: true
+#      MAVEN_GPG_PASSPHRASE:
+#        required: true
 jobs:
   test:
     name: Unit Test
