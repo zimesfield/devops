@@ -114,17 +114,17 @@ on:
 #
 #on: [push]
 # Here the environment variable is declared in workflow level
-env:
-  OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-#  OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
-#  OSSRH_GPG_SECRET_KEY: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
-#  MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-#  LEVEL: ${{ github.event.inputs.logLevel }}
-#  TAGS: ${{ github.event.inputs.tags }}
-#  ENVIRONMENT: ${{ github.event.inputs.environment }}
-  PUBLICENV: Available for all jobs in this workflow
 
 jobs:
+  env:
+    OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+    OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
+    OSSRH_GPG_SECRET_KEY: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+    MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+    LEVEL: ${{ github.event.inputs.logLevel }}
+    TAGS: ${{ github.event.inputs.tags }}
+    ENVIRONMENT: ${{ github.event.inputs.environment }}
+    PUBLICENV: Available for all jobs in this workflow
   sample-job-1:
     runs-on: ubuntu-latest
     steps:
