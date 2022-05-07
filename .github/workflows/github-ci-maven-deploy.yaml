@@ -60,14 +60,6 @@ jobs:
     timeout-minutes: 30
     needs: [ coverage ]
     runs-on: ubuntu-latest
-    env:
-      OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-      OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
-      OSSRH_GPG_SECRET_KEY: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
-      MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-      LEVEL: ${{ github.event.inputs.logLevel }}
-      TAGS: ${{ github.event.inputs.tags }}
-      ENVIRONMENT: ${{ github.event.inputs.environment }}
     steps:
       - uses: actions/checkout@v2
 
@@ -83,12 +75,20 @@ jobs:
 #          gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
 
       - name: Publish to Maven Central
+        env:
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
+          OSSRH_GPG_SECRET_KEY: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+          LEVEL: ${{ github.event.inputs.logLevel }}
+          TAGS: ${{ github.event.inputs.tags }}
+          ENVIRONMENT: ${{ github.event.inputs.environment }}
         run: |
-          echo "OSSRH_GPG_SECRET_KEY level: ${{env.OSSRH_GPG_SECRET_KEY}}"
-          echo "MAVEN_GPG_PASSPHRASE level: $MAVEN_GPG_PASSPHRASE"
+          echo OSSRH_GPG_SECRET_KEY level: $OSSRH_GPG_SECRET_KEY
+          echo MAVEN_GPG_PASSPHRASE level: $MAVEN_GPG_PASSPHRASE
           echo "OSSRH_TOKEN level: $OSSRH_TOKEN"
           echo "OSSRH_USERNAME level: $OSSRH_USERNAME"
-          echo "Log level: $LEVEL"
+          echo Log level: $LEVEL
           echo "Tags: $TAGS"
           echo "Environment: $ENVIRONMENT"
           NEW_VERSION=$(echo "${GITHUB_REF}" | cut -d "/" -f3)
