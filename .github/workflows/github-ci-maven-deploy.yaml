@@ -72,33 +72,24 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-#      - name: Set up JDK 11
-#        uses: actions/setup-java@v2
-#        with:
-#          distribution: 'adopt'
-#          java-version: 11
-#          server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
-#          server-username: OSSRH_USERNAME # env variable for username in deploy
-#          server-password: OSSRH_TOKEN # env variable for token in deploy
-#          gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }} # Value of the GPG private key to import
-#          gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: 11
+          server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
+          server-username: ${{ secrets.OSSRH_USERNAME }} # env variable for username in deploy
+          server-password: ${{ secrets.OSSRH_TOKEN }} # env variable for token in deploy
+          gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }} # Value of the GPG private key to import
+          gpg-passphrase: ${{ secrets.MAVEN_GPG_PASSPHRASE }} # env variable for GPG private key passphrase
 
       - name: Publish to Maven Central
-        env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
-          OSSRH_GPG_SECRET_KEY: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-          LEVEL: ${{ github.event.inputs.logLevel }}
-          TAGS: ${{ github.event.inputs.tags }}
-          ENVIRONMENT: ${{ github.event.inputs.environment }}
         run: |
-          echo "OSSRH_GPG_SECRET_KEY: $OSSRH_GPG_SECRET_KEY"
+          echo "OSSRH_GPG_SECRET_KEY: ${{ secrets.OSSRH_USERNAME }}"
           echo "MAVEN_GPG_PASSPHRASE: $MAVEN_GPG_PASSPHRASE"
           echo "OSSRH_TOKEN: $OSSRH_TOKEN"
           echo "OSSRH_USERNAME: $OSSRH_USERNAME"
-          echo "Log level: $LEVEL"
-          echo "Tags: $TAGS"
+          echo "Tags: ${{ github.event.inputs.tags }}"
           echo "Environment: $ENVIRONMENT"
           NEW_VERSION=$(echo "${GITHUB_REF}" | cut -d "/" -f3)
           echo "New version: ${NEW_VERSION}"
