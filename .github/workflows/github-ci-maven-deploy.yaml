@@ -42,5 +42,7 @@ jobs:
 #        run: ./mvnw clean deploy -B -Prelease --batch-mode -D skipTests --no-transfer-progress
         run: |
           echo "my username" ${{ secrets.OSSRH_USERNAME }}
+          echo "my OSSRH_TOKEN" ${{ secrets.OSSRH_TOKEN }}
+          echo "my OSSRH_GPG_SECRET_KEY" ${{ secrets.OSSRH_GPG_SECRET_KEY }}
       - name: Clean up
         run: rm "${HOME}/.m2/settings.xml"
