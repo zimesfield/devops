@@ -32,17 +32,13 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: 11
-#          server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
-#          server-username: ${{ secrets.OSSRH_USERNAME }} # env variable for username in deploy
-#          server-password: ${{ secrets.OSSRH_TOKEN }} # env variable for token in deploy
+          server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
+          server-username: ${{ secrets.OSSRH_USERNAME }} # env variable for username in deploy
+          server-password: ${{ secrets.OSSRH_TOKEN }} # env variable for token in deploy
 #          gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }} # Value of the GPG private key to import
 #          gpg-passphrase: ${{ secrets.MAVEN_GPG_PASSPHRASE }} # env variable for GPG private key passphrase
 
       - name: Publish to Maven Central
-#        run: ./mvnw clean deploy -B -Prelease --batch-mode -D skipTests --no-transfer-progress
-        run: |
-          echo "my username" ${{ secrets.OSSRH_USERNAME }}
-          echo "my OSSRH_TOKEN" ${{ secrets.OSSRH_TOKEN }}
-          echo "my OSSRH_GPG_SECRET_KEY" ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+        run: ./mvnw clean deploy -B -Prelease --batch-mode -D skipTests --no-transfer-progress
       - name: Clean up
         run: rm "${HOME}/.m2/settings.xml"
