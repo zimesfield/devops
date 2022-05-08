@@ -3,17 +3,6 @@ name: Feature Branch
 
 on:
   workflow_call:
-    inputs:
-      environment:
-        description: 'Job to run.'
-        type: string
-        required: false
-        default: 'dev'
-      pom-path:
-        description: 'Pom path.'
-        type: string
-        required: false
-        default: '../..'
 
 jobs:
   test:
