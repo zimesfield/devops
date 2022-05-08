@@ -19,56 +19,56 @@ on:
         required: true
 
 jobs:
-  test:
-    name: Unit Test
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        java-version: [ 11 ]
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: ${{ matrix.java-version }}
-      - run: ./mvnw --batch-mode --update-snapshots test
-
-  verify:
-    name: Integration Test
-    needs: test
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        java-version: [ 11 ]
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: ${{ matrix.java-version }}
-      - run: ./mvnw --batch-mode --update-snapshots verify
-  coverage:
-    name: Coverage Report
-    needs: [ test, verify ]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-          cache: maven
-      - name: Run coverage
-        run: ./mvnw -B verify -Pcoverage --no-transfer-progress
+#  test:
+#    name: Unit Test
+#    runs-on: ubuntu-latest
+#
+#    strategy:
+#      matrix:
+#        java-version: [ 11 ]
+#
+#    steps:
+#      - uses: actions/checkout@v2
+#      - uses: actions/setup-java@v2
+#        with:
+#          distribution: 'adopt'
+#          java-version: ${{ matrix.java-version }}
+#      - run: ./mvnw --batch-mode --update-snapshots test
+#
+#  verify:
+#    name: Integration Test
+#    needs: test
+#    runs-on: ubuntu-latest
+#
+#    strategy:
+#      matrix:
+#        java-version: [ 11 ]
+#
+#    steps:
+#      - uses: actions/checkout@v2
+#      - uses: actions/setup-java@v2
+#        with:
+#          distribution: 'adopt'
+#          java-version: ${{ matrix.java-version }}
+#      - run: ./mvnw --batch-mode --update-snapshots verify
+#  coverage:
+#    name: Coverage Report
+#    needs: [ test, verify ]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#      - uses: actions/setup-java@v2
+#        with:
+#          java-version: '11'
+#          distribution: 'adopt'
+#          cache: maven
+#      - name: Run coverage
+#        run: ./mvnw -B verify -Pcoverage --no-transfer-progress
 
   publish:
-    name: Publish to nnexus
+    name: Publish to artifactory
     timeout-minutes: 30
-    needs: [ coverage ]
+#    needs: [ coverage ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
