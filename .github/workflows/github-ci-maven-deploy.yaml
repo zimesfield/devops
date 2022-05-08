@@ -85,8 +85,6 @@ jobs:
           gpg-passphrase: ${{ secrets.MAVEN_GPG_PASSPHRASE }} # env variable for GPG private key passphrase
 
       - name: Publish to Maven Central
-        run: |
-          echo "Environment: $ENVIRONMENT"
-          NEW_VERSION=$(echo "${GITHUB_REF}" | cut -d "/" -f3)
-          echo "New version: ${NEW_VERSION}"
-          ./mvnw clean deploy -B -Prelease --batch-mode -D skipTests --no-transfer-progress
+        run: ./mvnw --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=false -DdeployAtEnd=false deploy
+      - name: Clean up
+        run: rm "${HOME}/.m2/settings.xml"
