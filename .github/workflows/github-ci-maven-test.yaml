@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        java-version: [ 11 ]
+        java-version: [ 17 ]
 
     steps:
       - uses: actions/checkout@v2
@@ -28,7 +28,7 @@ jobs:
 
     strategy:
       matrix:
-        java-version: [ 11 ]
+        java-version: [ 17 ]
 
     steps:
       - uses: actions/checkout@v2
@@ -45,7 +45,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v2
         with:
-          java-version: '11'
+          java-version: '17'
           distribution: 'adopt'
           cache: maven
       - name: Run coverage
