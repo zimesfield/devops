@@ -39,6 +39,6 @@ jobs:
           gpg-passphrase: ${{ secrets.OSSRH_GPG_PASSPHRASE }} # env variable for GPG private key passphrase
 
       - name: Publish to Maven Central
-        run: ./mvnw clean deploy -B -Prelease --batch-mode -D skipTests --no-transfer-progress
+        run: ./mvnw deploy -U -B -Prelease -DskipTests
       - name: Clean up
         run: rm "${HOME}/.m2/settings.xml"
