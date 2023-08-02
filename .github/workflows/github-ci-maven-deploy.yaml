@@ -40,5 +40,8 @@ jobs:
 
       - name: Publish to Maven Central
         run: ./mvnw deploy -U -B -Prelease -DskipTests
+         with:
+          distribution: 'temurin'
+          java-version: 17
       - name: Clean up
         run: rm "${HOME}/.m2/settings.xml"
