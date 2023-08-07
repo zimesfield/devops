@@ -1,6 +1,11 @@
 name: Publish Artifact
 
 on:
+  push:
+    branches:
+      - main
+    tags:
+      - "*"
   workflow_call:
     secrets:
       OSSRH_USERNAME:
