@@ -1,3 +1,5 @@
+name: Publish Artifact
+
 on:
   workflow_call:
     secrets:
@@ -11,12 +13,18 @@ on:
         required: true
 
 jobs:
-  deploy-snapshot:
+  publish:
     runs-on: ubuntu-latest
     steps:
       # https://github.com/actions/checkout
       - name: Checkout codebase
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 50
+
+      - uses: fregante/release-with-changelog@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       # https://github.com/actions/setup-java
       # Sets up Java, preparing the settings.xml to deploy to Sonatype (Maven)
