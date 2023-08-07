@@ -2,12 +2,6 @@ name: Publish Artifact
 
 on:
   workflow_call:
-    inputs:
-      environment:
-        description: 'Job to run.'
-        type: string
-        required: false
-        default: 'prod'
     secrets:
       OSSRH_USERNAME:
         required: true
@@ -19,26 +13,36 @@ on:
         required: true
 
 jobs:
-
   publish:
-    name: Publish to artifactory
-    timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 17
+      # https://github.com/actions/checkout
+      - name: Checkout codebase
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 50
+
+      - uses: fregante/release-with-changelog@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # https://github.com/actions/setup-java
+      # Sets up Java, preparing the settings.xml to deploy to Sonatype (Maven)
+      - name: Set up for deploy to Sonatype
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
           java-version: 17
+          distribution: zulu
           server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
-          server-username: ${{ secrets.OSSRH_USERNAME }} # env variable for username in deploy
-          server-password: ${{ secrets.OSSRH_TOKEN }} # env variable for token in deploy
+          server-username: SONATYPE_USERNAME # env variable for sonatype username
+          server-password: SONATYPE_PASSWORD # env variable for sonatype password
           gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }} # Value of the GPG private key to import
-          gpg-passphrase: ${{ secrets.MAVEN_GPG_PASSPHRASE }} # env variable for GPG private key passphrase
-      - name: Publish to Maven Central
-        run: ./mvnw deploy -U -B -Prelease -DskipTests
-      - name: Clean up
-        run: rm "${HOME}/.m2/settings.xml"
+          gpg-passphrase: CODESIGN_GPG_PASSPHRASE # env variable for GPG private key passphrase
 
-
+      # Execute deployment to sonatype
+      - name: Publish to Sonatype
+        run: mvn deploy -Prelease -DskipTests --batch-mode
+        env:
+          SONATYPE_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+          CODESIGN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
