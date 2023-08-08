@@ -30,33 +30,13 @@ jobs:
       #        uses: softprops/action-gh-release@v1
       #        with:
       #          body_path: CHANGELOG.md
-      - name: Update version
-        id: version
-        run: |
-          echo "GITHUB_REF is a tag you set for the release"
-          echo "Your GitHub ref: ${GITHUB_REF}"
-          VERSION=`echo "${GITHUB_REF}" | cut -f 3 -d "/"`
-          echo "Preparing version ${VERSION}"
-          echo "__version__ = \"${VERSION}\"" > __version__.py
-          echo "##[set-output name=version;]$(echo ${VERSION})"
-      - uses: vemel/update-changelog@0.0.1
-        id: changelog
+      - name: Release
+        uses: docker://antonyurchenko/git-release:v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          version: ${{ steps.version.outputs.version }}
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v2
-        with:
-          commit-message: Release ${{ steps.version.outputs.version }}
-          labels: release, bot
-          title: "Release ${{ steps.version.outputs.version }}"
-          body: |
-            # Release ${{ steps.version.outputs.version }}
-            
-            Merge this PR to update your version and changelog!
-            
-            ## Included Pull Requests
-            
-            ${{ steps.changelog.outputs.pulls_list_md }}
+          args: build/*.zip
+
       # https://github.com/actions/setup-java
       # Sets up Java, preparing the settings.xml to deploy to Sonatype (Maven)
       - name: Set up for deploy to Sonatype
