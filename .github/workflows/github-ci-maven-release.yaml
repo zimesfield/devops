@@ -1,8 +1,9 @@
 name: Publish Artifact
 
 on:
-  release:
-    type: published
+  push:
+    tags:
+      - "*.*.*"
   workflow_call:
     secrets:
       OSSRH_USERNAME:
@@ -21,12 +22,6 @@ jobs:
     steps:
       - name: Release
         uses: softprops/action-gh-release@v1
-        with:
-          draft: false
-          body_path: ../../CHANGELOG.md
-          name: ${{ steps.version.outputs.version }}
-          tag_name: ${{ github.ref }}
-          token: ${{ github.token }}
       # https://github.com/actions/setup-java
       # Sets up Java, preparing the settings.xml to deploy to Sonatype (Maven)
       - name: Set up for deploy to Sonatype
