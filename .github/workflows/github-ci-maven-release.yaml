@@ -29,7 +29,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          body_path: ${{ github.workspace }}-CHANGELOG.md
+          body_path: CHANGELOG.md
       # https://github.com/actions/setup-java
       # Sets up Java, preparing the settings.xml to deploy to Sonatype (Maven)
       - name: Set up for deploy to Sonatype
