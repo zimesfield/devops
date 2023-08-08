@@ -3,7 +3,7 @@ name: Publish Artifact
 on:
   push:
     tags:
-      - "*.*.*"
+      - "*"
   workflow_call:
     secrets:
       OSSRH_USERNAME:
