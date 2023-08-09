@@ -61,9 +61,9 @@ jobs:
           gpg-passphrase: CODESIGN_GPG_PASSPHRASE # env variable for GPG private key passphrase
 
       # Execute deployment to sonatype
-      - name: Publish to Sonatype
-        run: mvn deploy -Dversion=${{ steps.changelog_reader.outputs.version }} -Prelease -DskipTests --batch-mode
-        env:
-          SONATYPE_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          SONATYPE_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
-          CODESIGN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+#      - name: Publish to Sonatype
+#        run: mvn deploy -Dversion=${{ steps.changelog_reader.outputs.version }} -Prelease -DskipTests --batch-mode
+#        env:
+#          SONATYPE_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+#          SONATYPE_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+#          CODESIGN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
