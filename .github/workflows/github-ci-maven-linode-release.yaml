@@ -54,6 +54,24 @@ jobs:
         run: |
           mkdir -p ~/.m2
           echo "<settings>$GITHUB_ENV</settings>" > ~/.m2/settings.xml
+        GITHUB_ENV: |
+          <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                                        http://maven.apache.org/xsd/settings-1.0.0.xsd">
+            <servers>
+              <server>
+                <id>linode-release-repo</id>
+                <username>${{ secrets.LINODE_ACCESS_KEY }}</username>
+                <password>${{ secrets.LINODE_SECRET_KEY }}</password>
+              </server>
+              <server>
+                <id>linode-snapshot-repo</id>
+                <username>${{ secrets.LINODE_ACCESS_KEY }}</username>
+                <password>${{ secrets.LINODE_SECRET_KEY }}</password>
+              </server>
+            </servers>
+          </settings>
         env:
           LINODE_ACCESS_KEY: ${{ secrets.LINODE_ACCESS_KEY }}
           LINODE_SECRET_KEY: ${{ secrets.LINODE_SECRET_KEY }}
