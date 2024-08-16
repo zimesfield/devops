@@ -5,6 +5,7 @@ on:
     branches:
       - main
   workflow_call:
+    secrets:
       LINODE_SECRET_KEY:
         required: true
       LINODE_ACCESS_KEY:

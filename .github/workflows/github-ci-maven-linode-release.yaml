@@ -5,10 +5,11 @@ on:
     branches:
       - "main"
   workflow_call:
-    LINODE_SECRET_KEY:
-      required: true
-    LINODE_ACCESS_KEY:
-      required: true
+    secrets:
+      LINODE_SECRET_KEY:
+        required: true
+      LINODE_ACCESS_KEY:
+        required: true
 
 jobs:
   publish:
