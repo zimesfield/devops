@@ -1,0 +1,43 @@
+name: Publish Artifact
+
+on:
+  push:
+    branches:
+      - main
+  workflow_call:
+      LINODE_SECRET_KEY:
+        required: true
+      LINODE_ACCESS_KEY:
+        required: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+#    if: startsWith(github.ref, 'refs/tags/')
+#    if: startsWith(github.ref, 'main')
+    steps:
+      # https://github.com/actions/checkout
+      - name: Checkout codebase
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 50
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - name: Set up Maven
+        run: |
+          mkdir -p ~/.m2
+          echo "<settings>$GITHUB_ENV</settings>" > ~/.m2/settings.xml
+        env:
+          LINODE_ACCESS_KEY: ${{ secrets.LINODE_ACCESS_KEY }}
+          LINODE_SECRET_KEY: ${{ secrets.LINODE_SECRET_KEY }}
+
+      - name: Build and deploy with Maven
+        run: mvn clean deploy
+        env:
+          MAVEN_USERNAME: ${{ secrets.LINODE_ACCESS_KEY }}
+          MAVEN_PASSWORD: ${{ secrets.LINODE_SECRET_KEY }}

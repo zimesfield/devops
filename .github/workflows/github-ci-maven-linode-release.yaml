@@ -1,0 +1,65 @@
+name: Publish Artifact
+
+on:
+  push:
+    branches:
+      - "main"
+  workflow_call:
+    LINODE_SECRET_KEY:
+      required: true
+    LINODE_ACCESS_KEY:
+      required: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+#    if: startsWith(github.ref, 'refs/tags/')
+#    if: startsWith(github.ref, 'main')
+    steps:
+      # https://github.com/actions/checkout
+      - name: Checkout codebase
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 50
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - name: Get Changelog Entry
+        id: changelog_reader
+        uses: mindsers/changelog-reader-action@v2
+        with:
+          validation_level: warn
+          version: ${{ steps.tag_name.outputs.current_version }}
+          path: ./CHANGELOG.md
+
+      - name: Create tag from change log
+        uses: ncipollo/release-action@v1
+        with:
+          # This pulls from the "Get Changelog Entry" step above, referencing it's ID to get its outputs object.
+          # See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          tag: ${{ steps.changelog_reader.outputs.version }}
+          name: Release ${{ steps.changelog_reader.outputs.version }}
+          body: ${{ steps.changelog_reader.outputs.changes }}
+          prerelease: ${{ steps.changelog_reader.outputs.status == 'prereleased' }}
+          draft: ${{ steps.changelog_reader.outputs.status == 'unreleased' }}
+          allowUpdates: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Maven
+        run: |
+          mkdir -p ~/.m2
+          echo "<settings>$GITHUB_ENV</settings>" > ~/.m2/settings.xml
+        env:
+          LINODE_ACCESS_KEY: ${{ secrets.LINODE_ACCESS_KEY }}
+          LINODE_SECRET_KEY: ${{ secrets.LINODE_SECRET_KEY }}
+
+      # Execute deployment to sonatype
+      - name: Publish to release tagged version to linode
+        run: mvn deploy -Drevision=${{ steps.changelog_reader.outputs.version }} -Prelease -DskipTests --batch-mode
+        env:
+          MAVEN_USERNAME: ${{ secrets.LINODE_ACCESS_KEY }}
+          MAVEN_PASSWORD: ${{ secrets.LINODE_SECRET_KEY }}
